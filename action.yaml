@@ -12,14 +12,14 @@ branding:
     color: 'orange'
 
 inputs:
-    under_score:
-        description: 'A dummy input with _ in its name'
+    firmware_repo:
+        description: 'Which repo to clone the firmware source from.'
         required: false
-        default: '_'
-    hyphen-minus:
-        description: 'A dummy input with - in its name'
+        default: 'https://github.com/nodemcu/nodemcu-firmware.git'
+    firmware_branch:
+        description: 'Which branch of the firmware source repo to clone.'
         required: false
-        default: '-'
+        default: 'master'
 
 runs:
     using: 'docker'
