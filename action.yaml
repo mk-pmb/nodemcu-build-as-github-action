@@ -1,4 +1,6 @@
-%YAML 1.2
+%YAML 1.1
+# ^-- ATTN: [2019-12-31] If you use a later version, Github will fail
+#     with error message "Found incompatible YAML document."
 # -*- coding: UTF-8, tab-width: 4 -*-
 ---
 
