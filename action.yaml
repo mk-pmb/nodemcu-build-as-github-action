@@ -7,6 +7,10 @@
 name: 'Build NodeMCU'
 description: 'Build a NodeMCU firmware image.'
 
+branding:
+    icon: 'package'
+    color: 'orange'
+
 inputs:
     under_score:
         description: 'A dummy input with _ in its name'
