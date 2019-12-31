@@ -1,0 +1,33 @@
+%YAML 1.2
+# -*- coding: UTF-8, tab-width: 4 -*-
+---
+
+name: 'Build NodeMCU'
+description: 'Build a NodeMCU firmware image.'
+
+inputs:
+    under_score:
+        description: 'A dummy input with _ in its name'
+        required: false
+        default: '_'
+    hyphen-minus:
+        description: 'A dummy input with - in its name'
+        required: false
+        default: '-'
+
+runs:
+    using: 'docker'
+    image: 'Dockerfile'
+    args: []
+
+
+
+
+
+
+
+
+
+
+
+...
