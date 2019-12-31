@@ -20,10 +20,38 @@ NodeMCU firmware images by just uploading the recipe and very few
 meta data into a Github repo. Let's see how close we can get.
 
 
+-----
+-----
+
+⚠☠⚠ It doesn't work yet. ⚠☠⚠
+============================
+
+Im still in the early research phase.
+
+-----
+-----
+
+
+
+
+Usage
+-----
+
+Example repos:
+
+* https://github.com/mk-pmb/nodemcu-firmware-wifigpio-pmb
 
 
 
 <!--#toc stop="scan" -->
+
+
+
+Notes on Github actions
+-----------------------
+
+* [How to upload and download artifacts](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/persisting-workflow-data-using-artifacts#passing-data-between-jobs-in-a-workflow)
+* [Logging commands](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/development-tools-for-github-actions#logging-commands)
 
 
 

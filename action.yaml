@@ -12,14 +12,23 @@ branding:
     color: 'orange'
 
 inputs:
+    firmware_srcdir:
+        description: 'Where to put or expect the firmware files.'
+        required: false
+        default: '/opt/nodemcu-firmware'
     firmware_repo:
-        description: 'Which repo to clone the firmware source from.'
+        description: 'Which repo to clone the firmware source from, in case there is no Makefile in `firmware_srcdir` yet."
         required: false
         default: 'https://github.com/nodemcu/nodemcu-firmware.git'
     firmware_branch:
         description: 'Which branch of the firmware source repo to clone.'
         required: false
         default: 'master'
+    firmware_imgdest:
+        description: 'What filename to save the created firmware image as.'
+        required: false
+        default: 'nodemcu_firmware.img'
+
 
 runs:
     using: 'docker'
