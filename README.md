@@ -1,7 +1,7 @@
 ﻿
 <!--#echo json="package.json" key="name" underline="=" -->
-nodemcu-build-as-github-action
-==============================
+nodemcu-firmware-build-as-github-action
+=======================================
 <!--/#echo -->
 
 <!--#echo json="package.json" key="description" -->

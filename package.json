@@ -1,4 +1,4 @@
-{ "name": "nodemcu-build-as-github-action",
+{ "name": "nodemcu-firmware-build-as-github-action",
   "version": "0.0.1",
   "description": "A Github action that builds a custom NodeMCU firmware image for me.",
   "keywords": [
@@ -11,13 +11,13 @@
   ],
 
   "author": "M.K. (https://github.com/mk-pmb)",
-  "homepage": "https://github.com/mk-pmb/nodemcu-build-as-github-action/#readme",
+  "homepage": "https://github.com/mk-pmb/nodemcu-firmware-build-as-github-action/#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mk-pmb/nodemcu-build-as-github-action.git"
+    "url": "git+https://github.com/mk-pmb/nodemcu-firmware-build-as-github-action.git"
   },
   "bugs": {
-    "url": "https://github.com/mk-pmb/nodemcu-build-as-github-action/issues"
+    "url": "https://github.com/mk-pmb/nodemcu-firmware-build-as-github-action/issues"
   },
   "contributors": [],
 
