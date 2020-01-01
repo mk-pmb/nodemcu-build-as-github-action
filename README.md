@@ -39,7 +39,8 @@ Usage
 
 Example repos:
 
-* https://github.com/mk-pmb/nodemcu-firmware-wifigpio-pmb
+* https://github.com/mk-pmb/nodemcu-firmware-daily-vanilla/
+* https://github.com/mk-pmb/nodemcu-firmware-wifigpio-pmb/
 
 
 

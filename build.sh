@@ -19,10 +19,22 @@ function build () {
   fi
   cd -- "$INPUT_FIRMWARE_SRCDIR" || return $?
 
-
+  copy_custom_user_headers || return $?
+  /opt/build || return $?
 
 
   sleep 1s; echo "E: stub!" >&2; return 4
+}
+
+
+function copy_custom_user_headers () {
+  local SRC= BFN= DEST=
+  for SRC in /github/workspace/app.include/*.h; do
+    [ -f "$SRC" ] || continue
+    BFN="$(basename -- "$SRC")"
+    DEST="$INPUT_FIRMWARE_SRCDIR/app/include/user_$BFN"
+    cp --verbose --no-target-directory -- "$SRC" "$DEST" || return $?
+  done
 }
 
 
