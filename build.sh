@@ -9,7 +9,11 @@ function build_main () {
 
   local SELFPATH="$(readlink -m "$BASH_SOURCE"/..)"
   cd -- "$SELFPATH" || return $?
-  mkdir --parents /output || return $?
+
+  local REPO_DIR='/github/workspace'
+  local ARTIFACTS_BASEDIR="$REPO_DIR"
+  local FWDEST_DIR="$ARTIFACTS_BASEDIR/output"
+  mkdir --parents "$FWDEST_DIR" || return $?
 
   if [ -f "$INPUT_FIRMWARE_SRCDIR"/Makefile ]; then
     echo "D: Makefile already exists in $INPUT_FIRMWARE_SRCDIR => skip cloning."
@@ -28,7 +32,7 @@ function build_main () {
 
   snip_ls "$INPUT_FIRMWARE_SRCDIR"/bin/
   snip_ls /opt/lua/
-  snip_ls /output
+  snip_ls "$FWDEST_DIR"
 
   return "$CORE_RV"
 }
@@ -80,7 +84,7 @@ function move_output_files () {
   local FEXT=
   for FEXT in bin map; do
     mv --verbose --no-target-directory \
-      -- "$BFN.$FEXT" /output/"$INPUT_FIRMWARE_OUTBFN.$FEXT" || return $?
+      -- "$BFN.$FEXT" "$FWDEST_DIR/$INPUT_FIRMWARE_OUTBFN.$FEXT" || return $?
   done
 }
 
