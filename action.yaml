@@ -17,7 +17,7 @@ inputs:
         required: false
         default: '/opt/nodemcu-firmware'
     firmware_repo:
-        description: 'Which repo to clone the firmware source from, in case there is no Makefile in `firmware_srcdir` yet."
+        description: 'Which repo to clone the firmware source from, in case there is no Makefile in `firmware_srcdir` yet.'
         required: false
         default: 'https://github.com/nodemcu/nodemcu-firmware.git'
     firmware_branch:

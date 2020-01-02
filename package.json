@@ -23,6 +23,15 @@
 
   "private": true, "license": "ISC",
 
+  "scripts": {
+    "lint": "yaml-lint-all-recursive"
+  },
+
+  "dependencies": {},
+  "devDependencies": {
+    "yaml-lint-all-recursive": "^0.1.0"
+  },
+
 
   "engines": { "github": "*" }
 }
