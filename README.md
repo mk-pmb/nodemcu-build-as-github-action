@@ -20,19 +20,6 @@ NodeMCU firmware images by just uploading the recipe and very few
 meta data into a Github repo. Let's see how close we can get.
 
 
------
------
-
-⚠☠⚠ It doesn't work yet. ⚠☠⚠
-============================
-
-Im still in the early research phase.
-
------
------
-
-
-
 
 Usage
 -----
