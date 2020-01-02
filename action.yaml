@@ -24,10 +24,10 @@ inputs:
         description: 'Which branch of the firmware source repo to clone.'
         required: false
         default: 'master'
-    firmware_imgdest:
-        description: 'What filename to save the created firmware image as.'
+    firmware_outbfn:
+        description: 'Base filename for the created firmware image files.'
         required: false
-        default: 'nodemcu_firmware.img'
+        default: 'nodemcu_firmware'
 
 
 runs:
