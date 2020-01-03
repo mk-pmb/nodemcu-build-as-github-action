@@ -24,13 +24,17 @@ function build_main () {
   cd -- "$INPUT_FIRMWARE_SRCDIR" || return $?
   [ -z "$INPUT_FIRMWARE_GIT_RESET" ] \
     || snip_run git reset --hard "$INPUT_FIRMWARE_GIT_RESET" || return $?
-  snip_run git submodule update --recursive || return $?
+  snip_run '' git submodule update --recursive || return $?
+
+  echo -n 'Firmware repo is at commit: ';
+  git log --format=oneline --abbrev-commit --max-count=1
 
   snip_ls "$INPUT_FIRMWARE_SRCDIR"/bin/
   snip_ls /opt/lua/
 
   build_core
   local CORE_RV=$?
+  echo "##### core rv=$CORE_RV #####"
 
   snip_ls "$INPUT_FIRMWARE_SRCDIR"/bin/
   snip_ls /opt/lua/
@@ -42,7 +46,7 @@ function build_main () {
 
 function build_core () {
   copy_custom_user_headers || return $?
-  IMAGE_NAME='IMAGE_NAME' /opt/build || return $?
+  IMAGE_NAME='IMAGE_NAME' snip_run '' /opt/build || return $?
   move_output_files || return $?
 }
 
@@ -56,12 +60,13 @@ function copy_custom_user_headers () {
     cp --verbose --no-target-directory -- "$SRC" "$DEST" || return $?
   done
   snip_run 'user config MD5s' md5sum --binary \
-    -- "$INPUT_FIRMWARE_SRCDIR"/app/include/user_*
+    -- "$INPUT_FIRMWARE_SRCDIR"/app/include/user_* || true
 }
 
 
 function snip_run () {
   local CHAPT="$1"; shift
+  [ -n "$CHAPT" ] || CHAPT="$*"
   echo
   echo "----- 8< --== $CHAPT ==-- 8< ----- 8< ----- 8< ----- 8< ----- 8< -----"
   "$@"
