@@ -75,7 +75,7 @@ function snip_ls () { snip_run "ls $*" $LS "$@"; }
 
 
 function move_output_files () {
-  local MAP_ORIG=( "$INPUT_FIRMWARE_SRCDIR"/bin/nodemcu*.map )
+  local MAP_ORIG=( "$INPUT_FIRMWARE_SRCDIR"/bin/nodemcu[_-]*.map )
   local MAP_CNT="${#MAP_ORIG[@]}"
   [ "$MAP_CNT" == 1 ] || return 5$(
     echo "E: build created an unexpected number of output files:" \
