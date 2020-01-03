@@ -18,11 +18,13 @@ function build_main () {
   if [ -f "$INPUT_FIRMWARE_SRCDIR"/Makefile ]; then
     echo "D: Makefile already exists in $INPUT_FIRMWARE_SRCDIR => skip cloning."
   else
-    git clone --recurse-submodules \
-      --single-branch --branch "$INPUT_FIRMWARE_BRANCH" \
+    git clone --single-branch --branch "$INPUT_FIRMWARE_BRANCH" \
       "$INPUT_FIRMWARE_REPO" "$INPUT_FIRMWARE_SRCDIR" || return $?
   fi
   cd -- "$INPUT_FIRMWARE_SRCDIR" || return $?
+  [ -z "$INPUT_FIRMWARE_GIT_RESET" ] \
+    || snip_run git reset --hard "$INPUT_FIRMWARE_GIT_RESET" || return $?
+  snip_run git submodule update --recursive || return $?
 
   snip_ls "$INPUT_FIRMWARE_SRCDIR"/bin/
   snip_ls /opt/lua/

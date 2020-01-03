@@ -24,6 +24,10 @@ inputs:
         description: 'Which branch of the firmware source repo to clone.'
         required: false
         default: 'master'
+    firmware_git_reset:
+        description: 'If non-empty, hard-reset the repo to whatever is given here. It should probably be something commit-ish.'
+        required: false
+        default: ''
     firmware_outbfn:
         description: 'Base filename for the created firmware image files.'
         required: false
