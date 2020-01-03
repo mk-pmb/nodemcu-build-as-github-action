@@ -24,6 +24,7 @@ function build_main () {
   cd -- "$INPUT_FIRMWARE_SRCDIR" || return $?
   [ -z "$INPUT_FIRMWARE_GIT_RESET" ] \
     || snip_run '' git reset --hard "$INPUT_FIRMWARE_GIT_RESET" || return $?
+  snip_run '' git submodule init || return $?
   snip_run '' git submodule update --recursive || return $?
 
   echo -n 'D: Firmware repo is at commit: ';
