@@ -20,6 +20,14 @@ NodeMCU firmware images by just uploading the recipe and very few
 meta data into a Github repo. Let's see how close we can get.
 
 
+Beware the "master" branch
+--------------------------
+
+I'll try and keep the master branch pointing to the latest mostly-stable
+version, but plese check if you might prefer to use one of the version
+branches. They might be just as stable but more up-to-date.
+
+
 
 Usage
 -----
