@@ -6,11 +6,22 @@ function build_main () {
   export LANG{,UAGE}=en_US.UTF-8  # make error messages search engine-friendly
   local LS='ls --file-type --human-readable --group-directories-first'
   LS+=' --format=long --all'
+  local QUOT='"' APOS="'"
+
+  exec </dev/null || return $?$(echo "E: Failed to abandon stdin!" >&2)
 
   local SELFPATH="$(readlink -m "$BASH_SOURCE"/..)"
   cd -- "$SELFPATH" || return $?
 
+  echo "D: Building on" \
+    "$(uname --operating-system ) OS"\
+    "($(lsb_release_or_unknown description) $QUOT$(
+      lsb_release_or_unknown codename)$QUOT)" \
+    "running on a $(uname --machine) CPU."
+
   local REPO_DIR='/github/workspace'
+  snip_run '' copy_custom_dotfiles || return $?
+
   local ARTIFACTS_BASEDIR="$REPO_DIR"
   local FWDEST_DIR="$ARTIFACTS_BASEDIR/output"
   mkdir --parents "$FWDEST_DIR" || return $?
@@ -27,7 +38,9 @@ function build_main () {
   snip_run '' git submodule init || return $?
   snip_run '' git submodule update --recursive || return $?
 
-  echo -n 'D: Firmware repo is at commit: ';
+  echo -n "D: Firmware repo is at branch $(
+    git branch | sed -nre 's~^\* ~~p' || echo '(no branch?)'
+    ), commit ";
   git log --format=oneline --abbrev-commit --max-count=15 | sed -re '
     1b
     s~^~   ~
@@ -45,6 +58,22 @@ function build_main () {
 
   debug_ls_relevant_dirs
   return "$CORE_RV"
+}
+
+
+function lsb_release_or_unknown () {
+  lsb_release --short --$1 2>/dev/null || echo "$1=unknown"
+}
+
+
+function copy_custom_dotfiles () {
+  local SRC= DEST=
+  for SRC in {"$SELFPATH","$REPO_DIR"}/{,"$MCU_PLATFORM".}dot_files/*; do
+    [ -e "$SRC" ] || continue
+    DEST="$HOME/.$(basename -- "$SRC")"
+    cp --verbose --recursive --no-target-directory \
+      -- "$SRC" "$DEST" || return $?
+  done
 }
 
 
@@ -76,25 +105,27 @@ function debug_ls_relevant_dirs () {
 }
 
 
-function build_core () {
-  case "$MCU_PLATFORM" in
-    esp32 )
-      "$MCU_PLATFORM"_prepare_toolchain || return $?;;
-  esac
-
-  snip_run '' "$MCU_PLATFORM"_copy_custom_config || return $?
-  IMAGE_NAME='IMAGE_NAME' snip_run '' /opt/build || return $?
-  move_output_files || return $?
+function make_or_warn () {
+  snip_run '' make "$@" && return 0
+  echo "W: Failed to make $* (rv=$?), expect follow-up failures!" >&2
 }
 
 
-function esp32_prepare_toolchain () {
-  cp --no-target-directory -- sdkconfig{.defaults,} || return $?
-  snip_run '' /opt/configure-esp32
-  local CFG_RV=$?
-  snip_ls "$FWSRC"/cache/
-  snip_run 'toolchain checksums' sha1sum --binary cache/toolchain*.*z
-  return "$CFG_RV"
+function build_core () {
+  snip_run '' "$MCU_PLATFORM"_copy_custom_config || return $?
+
+  case "$MCU_PLATFORM" in
+    esp32 )
+      grep -qPe '^install_toolchain:\s' Makefile \
+        || echo 'install_toolchain: $(ESP32_GCC)' >>Makefile \
+        || return $?
+      make_or_warn install_toolchain
+      make_or_warn oldconfig
+      ;;
+  esac
+
+  IMAGE_NAME='IMAGE_NAME' snip_run '' /opt/build || return $?
+  move_output_files || return $?
 }
 
 
@@ -118,6 +149,7 @@ function esp32_copy_custom_config () {
     return 0
   fi
 
+  cp --no-target-directory -- sdkconfig{.defaults,} || return $?
   local RC_DIR="$REPO_DIR/$MCU_PLATFORM.sdkcfg/"
   local SRC= SUB=
   for SRC in "$RC_DIR"[0-9]{,*/}*.rc; do
