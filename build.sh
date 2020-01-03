@@ -28,9 +28,14 @@ function build_main () {
   snip_run '' git submodule update --recursive || return $?
 
   echo -n 'D: Firmware repo is at commit: ';
-  git log --format=oneline --abbrev-commit --max-count=1
+  git log --format=oneline --abbrev-commit --max-count=15 | sed -re '
+    1b
+    s~^~   ~
+    2s~^~Recent history:\n~
+    s~^|\n~&D: ~g
+    '
   local MCU_PLATFORM="$(guess_mcu_platform)"
-  echo "D: target platform was guessed as: ${MCU_PLATFORM:-?? unknown ??}"
+  echo "D: Target platform was guessed as: ${MCU_PLATFORM:-?? unknown ??}"
   [ -n "$MCU_PLATFORM" ] || return 3
 
   debug_ls_relevant_dirs
