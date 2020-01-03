@@ -51,12 +51,12 @@ function build_main () {
   echo "D: Target platform was guessed as: ${MCU_PLATFORM:-?? unknown ??}"
   [ -n "$MCU_PLATFORM" ] || return 3
 
-  debug_ls_relevant_dirs
+  debug_status_report_relevant_dirs
   build_core
   local CORE_RV=$?
-  echo "##### core rv=$CORE_RV #####"
+  echo "##### build core rv=$CORE_RV #####"
 
-  debug_ls_relevant_dirs
+  [ "$CORE_RV" == 0 ] || debug_status_report_relevant_dirs
   return "$CORE_RV"
 }
 
@@ -97,10 +97,11 @@ function guess_mcu_platform () {
 }
 
 
-function debug_ls_relevant_dirs () {
+function debug_status_report_relevant_dirs () {
   local FWSRC="$INPUT_FIRMWARE_SRCDIR"
   snip_ls "$FWSRC"/bin/
-  snip_ls "$FWSRC"/sdk/esp32-esp-idf/
+  snip_run '' find "$FWSRC"/b*/ -name '*.bin'
+  # snip_ls "$FWSRC"/sdk/*-idf/
   snip_ls /opt/lua/
 }
 
@@ -119,8 +120,10 @@ function build_core () {
       grep -qPe '^install_toolchain:\s' Makefile \
         || echo 'install_toolchain: $(ESP32_GCC)' >>Makefile \
         || return $?
+      snip_run '' python -m pip install --user --requirement \
+        sdk/esp32-esp-idf/requirements.txt
       make_or_warn install_toolchain
-      make_or_warn oldconfig
+      make_or_warn defconfig
       ;;
   esac
 
