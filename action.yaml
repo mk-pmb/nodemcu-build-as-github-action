@@ -31,7 +31,7 @@ inputs:
     firmware_outbfn:
         description: 'Base filename for the created firmware image files.'
         required: false
-        default: 'nodemcu_firmware'
+        default: 'output/nodemcu_'
 
 
 runs:

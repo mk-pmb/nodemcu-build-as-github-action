@@ -2,6 +2,31 @@
 # -*- coding: utf-8, tab-width: 2 -*-
 
 
+function build_ci () {
+  cd -- "$BAGAPATH" || return $?
+  exec </dev/null || return $?$(echo "E: Failed to abandon stdin!" >&2)
+  exec 2>&1 # because GitHub fails to time-sync stdout and stderr.
+  diag_platform || return $?
+
+  # Quick stuff first, to fail early if baking would be futile:
+  mkdir --parents -- "$FWDEST_DIR" || return $?
+  snip_run '' copy_custom_dotfiles || return $?
+  fwsrc_clone || return $?
+
+  local MCU_PLATFORM="$(guess_mcu_platform)"
+  echo "D: Target platform was guessed as: ${MCU_PLATFORM:-?? unknown ??}"
+  [ -n "$MCU_PLATFORM" ] || return 3
+
+  debug_status_report_relevant_dirs
+  build_core
+  local CORE_RV=$?
+  echo "##### build core rv=$CORE_RV #####"
+
+  [ "$CORE_RV" == 0 ] || debug_status_report_relevant_dirs
+  return "$CORE_RV"
+}
+
+
 function make_or_warn () {
   snip_run '' make "$@" && return 0
   echo "W: Failed to make $* (rv=$?), expect follow-up failures!" >&2
