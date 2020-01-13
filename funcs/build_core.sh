@@ -13,14 +13,7 @@ function build_core () {
 
   case "$MCU_PLATFORM" in
     esp32 )
-      grep -qPe '^install_toolchain:\s' Makefile \
-        || echo 'install_toolchain: $(ESP32_GCC)' >>Makefile \
-        || return $?
-      snip_run '' python -m pip install --user --requirement \
-        sdk/esp32-esp-idf/requirements.txt
-      make_or_warn install_toolchain
-      make_or_warn defconfig
-      ;;
+      "$MCU_PLATFORM"_prepare_build || return $?;;
   esac
 
   IMAGE_NAME='IMAGE_NAME' snip_run '' /opt/build || return $?

@@ -25,6 +25,22 @@ function esp32_copy_custom_config () {
 }
 
 
+function esp32_prepare_build () {
+  echo "pip home ls:"
+  snip_ls -d "$HOME"{,.cache{,pip}}
+  snip_run '' python -m pip install --upgrade \
+    setuptools \
+    || return $?
+  grep -qPe '^install_toolchain:\s' Makefile \
+    || echo 'install_toolchain: $(ESP32_GCC)' >>Makefile \
+    || return $?
+  snip_run '' python -m pip install --user --requirement \
+    sdk/esp32-esp-idf/requirements.txt
+  make_or_warn install_toolchain
+  make_or_warn defconfig
+}
+
+
 
 
 
