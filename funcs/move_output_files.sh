@@ -16,13 +16,14 @@ function move_output_files () {
     DEST_FN="${OUT_PFX}${DEST_FN}"
     # echo "$ORIG_FN -> $DEST_FN"
     [ -e "$DEST_FN" ] && return 3$(echo "E: target exists: $DEST_FN" >&2)
-    echo ${MV_CMD:-mv} --verbose --no-target-directory \
+    ${MV_CMD:-mv} --verbose --no-target-directory \
       -- "$ORIG_FN" "$DEST_FN" || return $?
   done
 
   [ -z "$UNKNOWN" ] || return 3$(
     echo "E: unknown potential output file(s): $UNKNOWN" >&2)
   [ -n "$ORIG_FN" ] || return 3$(echo "E: found no output file(s)." >&2)
+  snip_ls "$(dirname -- "${OUT_PFX}dummy.filename")" || return $?
 }
 
 
