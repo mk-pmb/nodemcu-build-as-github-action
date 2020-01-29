@@ -4,7 +4,10 @@
 
 function copy_custom_dotfiles () {
   local SRC= DEST=
-  for SRC in {"$BAGAPATH","$REPO_DIR"}/{,"$MCU_PLATFORM".}dot_files/*; do
+  local SRCS=(
+    {"$BAGAPATH","$INGREDIENTS_REPO_DIR"}/{,"$MCU_PLATFORM".}dot_files/*
+    )
+  for SRC in "${SRCS[@]}"; do
     [ -e "$SRC" ] || continue
     DEST="$HOME/.$(basename -- "$SRC")"
     cp --verbose --recursive --no-target-directory \

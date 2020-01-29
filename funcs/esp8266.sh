@@ -3,8 +3,8 @@
 
 
 function esp8266_copy_custom_config () {
-  local SRC="$REPO_DIR/$MCU_PLATFORM.app.include" BFN= DEST=
-  snip_ls 'custom user config:' "$SRC"/ || return $?
+  local SRC="$INGREDIENTS_REPO_DIR/$MCU_PLATFORM.app.include" BFN= DEST=
+  snip_ls "$SRC"/ || return $?
   for SRC in "$SRC"/*.h; do
     [ -f "$SRC" ] || continue
     BFN="$(basename -- "$SRC")"

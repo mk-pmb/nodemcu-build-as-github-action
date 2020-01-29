@@ -10,7 +10,8 @@ function esp32_copy_custom_config () {
   fi
 
   cp --no-target-directory -- sdkconfig{.defaults,} || return $?
-  local RC_DIR="$REPO_DIR/$MCU_PLATFORM.sdkcfg/"
+  local RC_DIR="$INGREDIENTS_REPO_DIR/$MCU_PLATFORM.sdkcfg/"
+  snip_ls "$RC_DIR"/ || return $?
   local SRC= SUB=
   for SRC in "$RC_DIR"[0-9]{,*/}*.rc; do
     [ -f "$SRC" ] || continue
