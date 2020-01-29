@@ -24,6 +24,9 @@ function fwsrc_clone () {
     2s~^~Recent history:\n~
     s~^|\n~&D: ~g
     '
+
+  apply_user_hotfixes "$INPUT_FIRMWARE_SRCDIR" \
+    "$INPUT_FIRMWARE_HOTFIX_CMD" || return $?
 }
 
 

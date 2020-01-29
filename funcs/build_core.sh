@@ -16,6 +16,7 @@ function build_ci () {
   local MCU_PLATFORM="$(guess_mcu_platform)"
   echo "D: Target platform was guessed as: ${MCU_PLATFORM:-?? unknown ??}"
   [ -n "$MCU_PLATFORM" ] || return 3
+  export MCU_PLATFORM
 
   debug_status_report_relevant_dirs
   build_core
@@ -33,7 +34,17 @@ function make_or_warn () {
 }
 
 
+function apply_user_hotfixes () {
+  local HOTFIXES_DIR="$1"; shift
+  snip_run "$FUNCNAME $HOTFIXES_DIR" \
+    in_dir "$HOTFIXES_DIR" eval "$@" || return $?
+}
+
+
 function build_core () {
+  apply_user_hotfixes "$INGREDIENTS_REPO_DIR" \
+    "$INPUT_RECIPE_HOTFIX_CMD" || return $?
+
   snip_run '' "$MCU_PLATFORM"_copy_custom_config || return $?
 
   case "$MCU_PLATFORM" in

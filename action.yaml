@@ -32,6 +32,14 @@ inputs:
         description: 'Base filename for the created firmware image files.'
         required: false
         default: 'output/nodemcu_'
+    firmware_hotfix_cmd:
+        description: 'A command to run in the firmware directory to pre-configure it or similar.'
+        required: false
+        default: ''
+    recipe_hotfix_cmd:
+        description: 'A command to run in the recipe directory (aka your repo) to pre-configure it or similar.'
+        required: false
+        default: ''
 
 
 runs:
