@@ -27,8 +27,23 @@ function esp8266_copy_custom_config () {
     cp --verbose --target-directory="$FWDEST_DIR" -- "$DEST" || return $?
   done
 
+  esp8266_find_daredefs >/dev/null && BUILD_STRATEGY='esp8266_build_daredefs'
+
   snip_run 'user config MD5s' md5sum --binary \
     -- "$INPUT_FIRMWARE_SRCDIR"/app/include/user_* || return $?
+}
+
+
+function esp8266_find_daredefs () {
+  grep -HonPe '^\s*//dare!\s*#define' \
+    "$INPUT_FIRMWARE_SRCDIR/app/include"/*.h \
+    | head --lines=1 | cut -d : -sf 1-2 | grep .
+}
+
+
+function esp8266_build_daredefs () {
+  echo 'Stub!' >&2
+  return 3
 }
 
 

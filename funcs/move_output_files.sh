@@ -7,6 +7,9 @@ function move_output_files () {
   mkdir --parents -- "$(dirname -- "$OUT_PFX")" || return $?
   local FILES=()
   readarray -t FILES < <(diag_find_output_files)
+
+  snip_oppofunc on_before_"$FUNCNAME" || return $?
+
   local ORIG_FN= DEST_FN= UNKNOWN=
   for ORIG_FN in "${FILES[@]}"; do
     DEST_FN="$(<<<"$ORIG_FN" "$BAGAPATH/funcs/$FUNCNAME.rename.sed")"
@@ -24,6 +27,8 @@ function move_output_files () {
     echo "E: unknown potential output file(s): $UNKNOWN" >&2)
   [ -n "$ORIG_FN" ] || return 3$(echo "E: found no output file(s)." >&2)
   snip_ls "$(dirname -- "${OUT_PFX}dummy.filename")" || return $?
+
+  snip_oppofunc on_after_"$FUNCNAME" || return $?
 }
 
 

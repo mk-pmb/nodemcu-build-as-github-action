@@ -32,12 +32,24 @@ inputs:
         description: 'Base filename for the created firmware image files.'
         required: false
         default: 'output/nodemcu_'
+    firmware_build_cmd:
+        description: 'Override the actual build command.'
+        required: false
+        default: ''
     firmware_hotfix_cmd:
         description: 'A command to run in the firmware directory to pre-configure it or similar.'
         required: false
         default: ''
     recipe_hotfix_cmd:
         description: 'A command to run in the recipe directory (aka your repo) to pre-configure it or similar.'
+        required: false
+        default: ''
+    ci_import_env:
+        description: 'A file with custom environment variables, as key=value pair lines.'
+        required: false
+        default: ''
+    hook_opt:
+        description: 'Opaque options for your custom hooks.'
         required: false
         default: ''
 
