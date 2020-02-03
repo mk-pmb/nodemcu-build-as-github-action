@@ -12,6 +12,7 @@ function buildmgr_ci () {
   mkdir --parents -- "$LOGS_DIR" || return $?
 
   # Quick stuff first, to fail early if baking would be futile:
+  snip_run '' ./util/prepare_basic_config.sh || return $?
   snip_run '' copy_custom_dotfiles || return $?
   fwsrc_clone || return $?
 
