@@ -30,6 +30,7 @@ function diag_find_output_files () {
     '(' -false
       -o -name '*.bin'
       -o -name '*.map'
+      -o -name 'lua*.cross'
     ')'
     )
   readarray -t FILES < <(find_sorted "${FILES[@]}")

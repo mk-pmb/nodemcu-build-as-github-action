@@ -7,5 +7,7 @@ s~_IMAGE_NAME(\.)~\1~
 s~/NodeMCU[._-]~\L&\E~g
 s~^(bin|build)/nodemcu(_integer|_float|)\.(bin|map)$~firmware.\3~
 
+s~^luac\.cross$~\r~
+
 s~^.*/~~
 s~^\r$~//ignore//~

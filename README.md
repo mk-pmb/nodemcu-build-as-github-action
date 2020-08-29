@@ -32,14 +32,14 @@ branches. They might be just as stable but more up-to-date.
 Usage
 -----
 
-Example repos:
+### Example repos for how to build a firmware:
 
 * https://github.com/mk-pmb/nodemcu-firmware-daily-vanilla/
 * https://github.com/mk-pmb/nodemcu-firmware-wifigpio-pmb/
 
+### How to obtain a compatible `luac.cross`
 
-
-<!--#toc stop="scan" -->
+see [docs/luac_cross.md](docs/luac_cross.md)
 
 
 
@@ -59,6 +59,10 @@ Known issues
 
 
 
+
+
+
+<!--#toc stop="scan" -->
 &nbsp;
 
 
