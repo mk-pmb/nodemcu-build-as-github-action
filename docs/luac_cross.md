@@ -38,8 +38,12 @@ the firmware. Instead,
 1.  Wait a bit. It should take very few minutes at most.
 1.  Chdir back to `just_luac_cross/`.
 1.  There should now be an executable file named `luac.cross`.
-1.  (optional) If you want to install it as a global system command,
-    one easy way to do it is `sudo mv -v -- luac.cross /usr/local/bin/`.
+1.  (optional) If you want to install it as a global system command named
+    `luac-for-nodemcu`, one way to do it is:
+    `sudo mv --verbose --no-target-directory -- luac.cross /usr/local/bin/luac-for-nodemcu`
+    * If you intend to cross-compile for several firmwares, you might want a
+      different command name for each of them. Then again, in this case you
+      probably won't install them as global commands.
 
 
 Config files
@@ -50,7 +54,7 @@ it needs to know the settings that the firmware was built with.
 
 The most reliable choice is to provide config files with the exact same
 content as the effective configs used for the firmware build.
-However, sometimes this would be overly complicated. A a close enough
+However, sometimes this would be overly complicated. A close enough
 approximation might work as well — or, of course, might cause subtle bugs
 far in the future, when you've long forgotten this warning. ;-)
 
@@ -58,7 +62,7 @@ far in the future, when you've long forgotten this warning. ;-)
   probably just use `config.h` and `modules.h` from your recipe repo's
   `esp8266.app.include/` directory.
 
-* In the docs, the chapter "Compiling code" in its
+* In the docs, in chapter "Compiling code" in its
   [current (2020-08-29) version][docs-compile-87030a8],
   the part near the bottom sounds like it might be enough to have the same
   setting of `LUA_NUMBER_INTEGRAL`.
