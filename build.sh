@@ -7,8 +7,17 @@ function build_main () {
   export BAGAPATH="$(readlink -m "$BASH_SOURCE"/..)"
   export INGREDIENTS_REPO_DIR='/github/workspace'
   export ARTIFACTS_BASEDIR="$INGREDIENTS_REPO_DIR"
-  export FWDEST_DIR="$ARTIFACTS_BASEDIR/output"
+  # ^-- Path of the uppermost directory that Github's upload action can access.
   export LOGS_DIR="$ARTIFACTS_BASEDIR/logs"
+
+  export FW_BUILD_DIR="$INGREDIENTS_REPO_DIR/output"
+  # ^-- Where to unpack the firmware source and then also build it there.
+
+  local RESULTS_DESTDIR="$ARTIFACTS_BASEDIR/${INPUT_RESULTS_DIR#/}"
+  RESULTS_DESTDIR="${RESULTS_DESTDIR%/}"
+  # ^-- Where to move the files that were produces by the build.
+  #     Config should usually designare a subdirectory within this path.
+
 
   local LIB=
   for LIB in \

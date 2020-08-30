@@ -26,11 +26,16 @@ function diag_find_output_files () {
   [ "$*" == scan ] || local FILES=()
   FILES=(
     .
-    -path '*/sdk/esp32-esp-idf' -prune ,
+    -path './msvc' -prune ,
+    -path './sdk' -prune ,
+    -path './sdk-overrides' -prune ,
     '(' -false
       -o -name '*.bin'
       -o -name '*.map'
-      -o -name 'lua*.cross'
+      -o -path '*/include/user_*.h'
+      -o -path '*/include/user_*.ini'
+      -o -name 'luac*.*cross*'
+      -o -iname 'sdkconfig*'
     ')'
     )
   readarray -t FILES < <(find_sorted "${FILES[@]}")
@@ -65,6 +70,18 @@ function debug_status_report_relevant_dirs () {
 function diag_git_repo () {
   git branch --list --verbose
   git status --porcelain
+}
+
+
+function diag_gcc_defines_to_ini () {
+  local FMT="$1"; shift
+  local SRC=
+  for SRC in "$@"; do
+    echo "[$SRC]"
+    gcc -E -dM "${FMT//%/$SRC}" \
+      | sort --version-sort | sed -nre 's~^#define\s+(\S+)\s+~\1 = ~p'
+    echo
+  done
 }
 
 

@@ -28,10 +28,6 @@ inputs:
         description: 'If non-empty, hard-reset the repo to whatever is given here. It should probably be something commit-ish.'
         required: false
         default: ''
-    firmware_outbfn:
-        description: 'Base filename for the created firmware image files.'
-        required: false
-        default: 'results/nodemcu_'
     firmware_build_cmd:
         description: 'Override the actual build command.'
         required: false
@@ -42,6 +38,14 @@ inputs:
         default: ''
     recipe_hotfix_cmd:
         description: 'A command to run in the recipe directory (aka your repo) to pre-configure it or similar.'
+        required: false
+        default: ''
+    results_dir:
+        description: 'Where to put the result files. Must be a subdirectory path relative to the GitHub workspace.'
+        required: false
+        default: 'results'
+    results_rename_sed:
+        description: 'Additional GNU sed rules for filtering or renaming result files.'
         required: false
         default: ''
     ci_import_env:

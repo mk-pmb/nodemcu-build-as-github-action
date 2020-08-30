@@ -3,32 +3,47 @@
 
 
 function move_output_files () {
-  local OUT_PFX="$FWDEST_DIR/$INPUT_FIRMWARE_OUTBFN"
-  mkdir --parents -- "$(dirname -- "$OUT_PFX")" || return $?
+  local OUT_DIR="$RESULTS_DESTDIR"
+  mkdir --parents -- "$OUT_DIR" || return $?
   local FILES=()
   readarray -t FILES < <(diag_find_output_files)
-
   snip_oppofunc on_before_"$FUNCNAME" || return $?
-
-  local ORIG_FN= DEST_FN= UNKNOWN=
-  for ORIG_FN in "${FILES[@]}"; do
-    DEST_FN="$(<<<"$ORIG_FN" "$BAGAPATH/funcs/$FUNCNAME.rename.sed")"
-    [ "$DEST_FN" == //ignore// ] && continue
-    [ -n "$DEST_FN" ] || return 4$(
-      echo "E: $FUNCNAME: empty destination filename for '$ORIG_FN'" >&2)
-    DEST_FN="${OUT_PFX}${DEST_FN}"
-    # echo "$ORIG_FN -> $DEST_FN"
-    [ -e "$DEST_FN" ] && return 3$(echo "E: target exists: $DEST_FN" >&2)
-    ${MV_CMD:-mv} --verbose --no-target-directory \
-      -- "$ORIG_FN" "$DEST_FN" || return $?
-  done
-
-  [ -z "$UNKNOWN" ] || return 3$(
-    echo "E: unknown potential output file(s): $UNKNOWN" >&2)
-  [ -n "$ORIG_FN" ] || return 3$(echo "E: found no output file(s)." >&2)
-  snip_ls "$(dirname -- "${OUT_PFX}dummy.filename")" || return $?
-
+  snip_run '' rename_output_files || return $?
+  snip_ls "$OUT_DIR" || return $?
   snip_oppofunc on_after_"$FUNCNAME" || return $?
+}
+
+
+function rename_output_files () {
+  local ORIG_FN= FAILS=0
+  for ORIG_FN in "${FILES[@]}"; do
+    rename_output_files__each "$ORIG_FN" || (( FAILS += 1 ))
+  done
+  [ -n "$ORIG_FN" ] || return 3$(echo "E: found no output file(s)." >&2)
+  [ "$FAILS" == 0 ] || return 3$(echo "E: had $FAILS fails." >&2)
+}
+
+
+function rename_output_files__each () {
+  local ORIG_FN="$1" BAGA_FN= DEST_FN=
+  printf "orig: '%s'\t%s" "$ORIG_FN" '-> baga: '
+  BAGA_FN="$(<<<"$ORIG_FN" "$BAGAPATH/funcs/move_output_files.rename.sed")"
+  printf "'%s'\t%s" "$BAGA_FN" '-> recipe: '
+  DEST_FN="$(<<<"$BAGA_FN" sed -rf <(echo "$INPUT_RESULTS_RENAME_SED"))"
+  printf "'%s'\t=> " "$DEST_FN"
+  case "$DEST_FN" in
+    '' )
+      echo "E: $FUNCNAME: empty destination filename for '$ORIG_FN'" >&2
+      return 3;;
+    '#'* )
+        echo 'skip.'
+      [ -z "$MV_SKIP_CMD" ] || $MV_SKIP_CMD "$ORIG_FN" || return $?
+      return 0;;
+  esac
+  DEST_FN="$OUT_DIR/$DEST_FN"
+  [ -e "$DEST_FN" ] && return 3$(echo "E: target exists: $DEST_FN" >&2)
+  ${MV_CMD:-mv --verbose --no-target-directory --} \
+    "$ORIG_FN" "$DEST_FN" || return $?
 }
 
 

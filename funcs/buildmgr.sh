@@ -8,7 +8,7 @@ function buildmgr_ci () {
   exec 2>&1 # because GitHub fails to time-sync stdout and stderr.
   diag_platform || return $?
   ci_import_env || return $?
-  mkdir --parents -- "$FWDEST_DIR" || return $?
+  mkdir --parents -- "$FW_BUILD_DIR" || return $?
   mkdir --parents -- "$LOGS_DIR" || return $?
 
   # Quick stuff first, to fail early if baking would be futile:
@@ -75,7 +75,7 @@ function buildmgr_commence_fallible () {
 
   snip_oppofunc on_buildchain_ready || return $?
   $BUILD_STRATEGY || return $?
-  snip_run '' diag_find_output_files
+  snip_run '' git status -uall
   move_output_files || return $?
 }
 

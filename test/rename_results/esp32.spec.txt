@@ -1,0 +1,14 @@
+# -*- coding: utf-8, tab-width: 2 -*-
+
+nodemcu_IMAGE_NAME.bin            : nodemcu_firmware.float.bin
+build/bootloader/bootloader.bin   :
+build/bootloader/bootloader.map   :
+build/include/sdkconfig.h     :
+build/luac_cross/luac.cross   : luac-for-nodemcu
+build/NodeMCU.bin     :
+build/NodeMCU.map     :
+build/partitions.bin  :
+components/platform/include/user_version.h  :
+sdkconfig.defaults  :
+sdkconfig.old       :
+sdkconfig           : sdkconfig

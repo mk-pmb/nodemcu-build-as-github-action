@@ -23,6 +23,9 @@ function esp32_copy_custom_config () {
     echo "##### << $SUB << #####"
     echo
   done >>"$DEST" || return $?
+
+  # SRC="$INPUT_FIRMWARE_SRCDIR/build/include/sdkconfig.h"
+  # diag_gcc_defines_to_ini "$SRC" '' >"${SRC%.h}.ini" || return $?
 }
 
 
