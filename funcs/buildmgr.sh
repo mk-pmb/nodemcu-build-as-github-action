@@ -64,6 +64,7 @@ function buildmgr_commence_fallible () {
     "$INPUT_RECIPE_HOTFIX_CMD" || return $?
 
   snip_oppofunc on_before_custom_config || return $?
+  local PLAT_INCL_PREFIX="$INGREDIENTS_REPO_DIR/$MCU_PLATFORM."
   snip_run '' "$MCU_PLATFORM"_copy_custom_config || return $?
   snip_oppofunc on_after_custom_config || return $?
 
@@ -96,6 +97,24 @@ function run_build_script () {
     snip_oppofunc on_after_"$FUNCNAME" || return $?
   done
   return "${BUILD[rv]}"
+}
+
+
+function buildmgr_plain_copy_dir_if_exists () {
+  local SRC="$1"; shift
+  local DEST="$1"; shift
+  if [ -z "$DEST" ]; then
+    DEST="$SRC"
+    SRC="${DEST//\//.}"
+  fi
+  SRC="${PLAT_INCL_PREFIX}$SRC"
+  if [ ! -d "$SRC" ]; then
+    echo "D: Not a directory: $SRC"
+    return 0
+  fi
+  snip_ls "$SRC/" || true
+  cp --verbose --recursive --no-target-directory \
+    -- "$SRC/" "$INPUT_FIRMWARE_SRCDIR/$DEST/" || return $?
 }
 
 

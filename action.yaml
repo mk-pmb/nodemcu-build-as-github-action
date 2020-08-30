@@ -31,7 +31,7 @@ inputs:
     firmware_outbfn:
         description: 'Base filename for the created firmware image files.'
         required: false
-        default: 'output/nodemcu_'
+        default: 'results/nodemcu_'
     firmware_build_cmd:
         description: 'Override the actual build command.'
         required: false

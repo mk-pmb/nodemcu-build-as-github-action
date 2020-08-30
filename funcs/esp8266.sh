@@ -3,7 +3,7 @@
 
 
 function esp8266_copy_custom_config () {
-  local SRC_INCL="$INGREDIENTS_REPO_DIR/$MCU_PLATFORM.app.include"
+  local SRC_INCL="${PLAT_INCL_PREFIX}app.include"
   snip_ls "$SRC_INCL"/ || return $?
   local DEST_INCL="$INPUT_FIRMWARE_SRCDIR/app/include"
 
@@ -29,14 +29,23 @@ function esp8266_copy_custom_config () {
 
   esp8266_find_daredefs >/dev/null && BUILD_STRATEGY='esp8266_build_daredefs'
 
-  snip_run 'user config MD5s' md5sum --binary \
-    -- "$INPUT_FIRMWARE_SRCDIR"/app/include/user_* || return $?
+  snip_run '' esp8266_user_config_checksums md5 || return $?
+}
+
+
+function esp8266_user_config_checksums () {
+  local ALGO="$1"
+  local FILE=
+  for FILE in "$DEST_INCL/user"_*; do
+    [ -f "$FILE" ] || continue
+    printf '%20s  ' "$FILE"
+    "$ALGO"sum --binary -- "$FILE" | grep -oPe '^\w+' || return $?
+  done
 }
 
 
 function esp8266_find_daredefs () {
-  grep -HonPe '^\s*//dare!\s*#define' \
-    "$INPUT_FIRMWARE_SRCDIR/app/include"/*.h \
+  grep -HonPe '^\s*//dare!\s*#define' "$DEST_INCL"/*.h \
     | head --lines=1 | cut -d : -sf 1-2 | grep .
 }
 
