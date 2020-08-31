@@ -7,9 +7,9 @@ app/include/user_version.h    :
 bin/0x00000.bin   :
 bin/0x10000.bin   :   spiffs.img
 
-bin/nodemcu_float_IMAGE_NAME.bin    : nodemcu_firmware.float.bin
+bin/nodemcu_float_IMAGE_NAME.bin    : firmware.float.bin
 bin/nodemcu_float_IMAGE_NAME.map    :
-bin/nodemcu_integer_IMAGE_NAME.bin  : nodemcu_firmware.int.bin
+bin/nodemcu_integer_IMAGE_NAME.bin  : firmware.int.bin
 bin/nodemcu_integer_IMAGE_NAME.map  :
 
 luac.cross      : luac-for-nodemcu

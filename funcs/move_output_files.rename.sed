@@ -13,10 +13,10 @@ s~^bin/0x10{4}\.bin$~spiffs.img~
 
 # The actual firmware and its companions
 s~/NodeMCU[._-]~\L&\E~g
-s~^(nodemcu_)IMAGE_NAME\.(bin|map)$~\1firmware.float.\2~
-s~^(bin|build)/(nodemcu)_((int)eger|(float))_IMAGE_NAME\.(bin|map|$\
+s~^nodemcu_IMAGE_NAME\.(bin|map)$~firmware.float.\1~
+s~^(bin|build)/nodemcu_((int)eger|(float))_IMAGE_NAME\.(bin|map|$\
   #1           2         34         5                    6 \
-  )$~\2_firmware\.\4\5.\6~
+  )$~firmware\.\3\4.\5~
 /\.map$/s~^~#~
 
 
