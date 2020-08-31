@@ -28,12 +28,16 @@ inputs:
         description: 'If non-empty, hard-reset the repo to whatever is given here. It should probably be something commit-ish.'
         required: false
         default: ''
-    firmware_build_cmd:
-        description: 'Override the actual build command.'
-        required: false
-        default: ''
     firmware_hotfix_cmd:
         description: 'A command to run in the firmware directory to pre-configure it or similar.'
+        required: false
+        default: ''
+    firmware_verify_license:
+        description: "Optionally verify that a file from the firmware repo has the same content as a file from the recipe repo."
+        required: false
+        default: ''
+    firmware_build_cmd:
+        description: 'Override the actual build command.'
         required: false
         default: ''
     recipe_hotfix_cmd:

@@ -27,6 +27,25 @@ function fwsrc_clone () {
 
   apply_user_hotfixes "$INPUT_FIRMWARE_SRCDIR" \
     "$INPUT_FIRMWARE_HOTFIX_CMD" || return $?
+
+  fwsrc_clone__liccmp || return $?
+}
+
+
+function fwsrc_clone__liccmp () {
+  local CMP="$INPUT_FIRMWARE_VERIFY_LICENSE"
+  case "$CMP" in
+    '' ) return 0;;
+    *' = '* ) ;;
+    * ) CMP="LICENSE = $CMP";;
+  esac
+  local SRC='/dev/null'
+  case "$CMP" in
+    *' = '* ) SRC="${CMP% = *}"; CMP="${CMP##* = }";;
+  esac
+  [ "${SRC:0:1}" == / ] || SRC="$INPUT_FIRMWARE_SRCDIR/$SRC"
+  [ "${CMP:0:1}" == / ] || CMP="$INGREDIENTS_REPO_DIR/$CMP"
+  diff -sU 9009009 -- "$SRC" "$CMP" || return $?
 }
 
 
