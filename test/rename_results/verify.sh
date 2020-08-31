@@ -30,7 +30,7 @@ function verify_one_spec () {
   DESTS_WANT=( "${FILES[@]##* : }" )
   FILES=( "${FILES[@]% : *}" )
   local MV_CNT=0
-  local OUT_DIR='…outpath…'
+  local OUT_DIR='mock://'
   eval MV_{,SKIP_}CMD='verify_one_mv' rename_output_files || return $?
   [ "$MV_CNT" -ge 1 ] || return 3$(echo "E: No actual destinations." >&2)
   [ "$MV_CNT" == "${#DESTS_WANT[@]}" ] || return 3$(
