@@ -21,6 +21,11 @@ function rename_output_files () {
   done
   [ -n "$ORIG_FN" ] || return 3$(echo "E: found no output file(s)." >&2)
   [ "$FAILS" == 0 ] || return 3$(echo "E: had $FAILS fails." >&2)
+
+  echo
+  echo 'Git status of the results directory:'
+  ( cd -- "$OUT_DIR" && git status --porcelain --untracked=all .
+  ) | grep . || return 3$(echo "E: No uncommitted changes." >&2)
 }
 
 
