@@ -12,6 +12,18 @@ branding:
     color: 'orange'
 
 inputs:
+    build_timezone:
+        description: 'What timezone to use for the build, and thus, the dates in the version information.'
+        required: false
+        default: 'UTC'
+    build_custom_make_opts:
+        description: 'Custom options for "make" to put in front of the targets list, in build strategies that support it.'
+        required: false
+        default: ''
+    build_custom_make_targets:
+        description: 'Custom targets list for "make", in build strategies that support it.'
+        required: false
+        default: ''
     firmware_srcdir:
         description: 'Where to put or expect the firmware files.'
         required: false

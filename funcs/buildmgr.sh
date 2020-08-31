@@ -25,8 +25,22 @@ function buildmgr_ci () {
   buildmgr_commence_fallible
   local BUILD_RV=$?
   echo "##### overall build rv=$BUILD_RV #####"
+  if [ "$BUILD_RV" == 0 ]; then
+    echo '
+       ▄▀▀▄   █   █  █
+      █    █  █ ▄▀   █
+      █    █  █▀▄    █
+       ▀▄▄▀   █  ▀▄  ▄'
+  else
+    echo '
+      █▀▀▀  ▄▀▄   █  █     █
+      █    █   █  █  █     █
+      █▀▀  █▀▀▀█  █  █     █
+      █    █   █  █  █▄▄▄  ▄'
+    echo
+    debug_status_report_relevant_dirs
+  fi
 
-  [ "$BUILD_RV" == 0 ] || debug_status_report_relevant_dirs
   return "$BUILD_RV"
 }
 
@@ -80,7 +94,27 @@ function buildmgr_commence_fallible () {
 }
 
 
-function run_docker_build_script () { IMAGE_NAME='IMAGE_NAME' /opt/build; }
+function run_docker_build_script () {
+  local MAKE_OPT="$INPUT_BUILD_CUSTOM_MAKE_OPTS"
+  local GHA_TGT="$INPUT_BUILD_CUSTOM_MAKE_TARGETS"
+  local MAKE_TGT="$BUILD_MAKE_TARGETS"
+  if [ -n "$MAKE_TGT" ]; then
+    [ -z "$GHA_TGT" ] || return 3$(
+      echo "E: Build targets cannot be set in both env and GHA config." >&2)
+  else
+    MAKE_TGT="$GHA_TGT"
+  fi
+  [ -n "$MAKE_TGT" ] || MAKE_TGT='clean all'
+
+  local BCMD=(
+    env
+    IMAGE_NAME="${IMAGE_NAME:-IMAGE_NAME}"
+    BUILD_MAKE_TARGETS="$MAKE_OPT $MAKE_TGT"
+    /opt/build
+    )
+  echo "D: effective build command:$(printf ' ‹%s›' "${BCMD[@]}")"
+  "${BCMD[@]}" || return $?
+}
 
 
 function run_build_script () {
