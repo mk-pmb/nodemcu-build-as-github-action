@@ -67,8 +67,8 @@ far in the future, when you've long forgotten this warning. ;-)
   the part near the bottom sounds like it might be enough to have the same
   setting of `LUA_NUMBER_INTEGRAL`.
   A quick glance at the `luac.cross` code shows that it also uses some other
-  settings like `LUA_MAX_FLASH_SIZE`, `DEVELOPMENT_TOOLS`,
-  and `DEVELOPMENT_USE_GDB`.
+  settings like `LUA_PACK_TVALUES`, `LUA_MAX_FLASH_SIZE`,
+  `DEVELOPMENT_TOOLS`, and `DEVELOPMENT_USE_GDB`.
 
 
 
