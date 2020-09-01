@@ -25,21 +25,8 @@ function buildmgr_ci () {
   buildmgr_commence_fallible
   local BUILD_RV=$?
   echo "##### overall build rv=$BUILD_RV #####"
-  if [ "$BUILD_RV" == 0 ]; then
-    echo '
-       ▄▀▀▄   █   █  █
-      █    █  █ ▄▀   █
-      █    █  █▀▄    █
-       ▀▄▄▀   █  ▀▄  ▄'
-  else
-    echo '
-      █▀▀▀  ▄▀▄   █  █     █
-      █    █   █  █  █     █
-      █▀▀  █▀▀▀█  █  █     █
-      █    █   █  █  █▄▄▄  ▄'
-    echo
-    debug_status_report_relevant_dirs
-  fi
+  banner rv "$BUILD_RV"
+  [ "$BUILD_RV" == 0 ] || debug_status_report_relevant_dirs
 
   return "$BUILD_RV"
 }
