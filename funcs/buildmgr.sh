@@ -92,7 +92,7 @@ function buildmgr_commence_fallible () {
   snip_oppofunc on_buildchain_ready || return $?
   $BUILD_STRATEGY || return $?
   snip_run '' git status -uall
-  move_output_files || return $?
+  export_output_files || return $?
 }
 
 

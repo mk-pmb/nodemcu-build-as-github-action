@@ -2,7 +2,7 @@
 # -*- coding: utf-8, tab-width: 2 -*-
 
 
-function move_output_files () {
+function export_output_files () {
   local OUT_DIR="$RESULTS_DESTDIR"
   mkdir --parents -- "$OUT_DIR" || return $?
   local FILES=()
@@ -33,7 +33,7 @@ function rename_output_files () {
 function rename_output_files__each () {
   local ORIG_FN="$1" BAGA_FN= DEST_FN=
   printf "orig: '%s'\t%s" "$ORIG_FN" '-> baga: '
-  BAGA_FN="$(<<<"$ORIG_FN" "$BAGAPATH/funcs/move_output_files.rename.sed")"
+  BAGA_FN="$(<<<"$ORIG_FN" "$BAGAPATH/funcs/rename_output_files.sed")"
   printf "'%s'\t%s" "$BAGA_FN" '-> recipe: '
   DEST_FN="$(<<<"$BAGA_FN" sed -rf <(echo "$INPUT_RESULTS_RENAME_SED"))"
   printf "'%s'\t=> " "$DEST_FN"
@@ -43,12 +43,12 @@ function rename_output_files__each () {
       return 3;;
     '#'* )
         echo 'skip.'
-      [ -z "$MV_SKIP_CMD" ] || $MV_SKIP_CMD "$ORIG_FN" || return $?
+      [ -z "$EXPORT_SKIP_CMD" ] || $EXPORT_SKIP_CMD "$ORIG_FN" || return $?
       return 0;;
   esac
   DEST_FN="$OUT_DIR/$DEST_FN"
   [ -e "$DEST_FN" ] && return 3$(echo "E: target exists: $DEST_FN" >&2)
-  ${MV_CMD:-mv --verbose --no-target-directory --} \
+  ${EXPORT_CMD:-cp --verbose --no-target-directory --} \
     "$ORIG_FN" "$DEST_FN" || return $?
 }
 
@@ -61,4 +61,4 @@ function rename_output_files__each () {
 
 
 
-[ "$1" == --lib ] && return 0; move_output_files "$@"; exit $?
+[ "$1" == --lib ] && return 0; export_output_files "$@"; exit $?
