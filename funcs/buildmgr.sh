@@ -77,6 +77,8 @@ function buildmgr_commence_fallible () {
   apply_user_hotfixes "$INGREDIENTS_REPO_DIR" \
     "$INPUT_RECIPE_HOTFIX_CMD" || return $?
 
+  snip_run buildmgr_early_cleanup || return $?
+
   snip_oppofunc on_before_custom_config || return $?
   local PLAT_INCL_PREFIX="$INGREDIENTS_REPO_DIR/$MCU_PLATFORM."
   snip_run '' "$MCU_PLATFORM"_copy_custom_config || return $?
@@ -94,6 +96,15 @@ function buildmgr_commence_fallible () {
 }
 
 
+function buildmgr_early_cleanup () {
+  # Let's clean up early to ensure the build isn't accidentially
+  # contaminated. This has to be done before other build preparations,
+  # because the latter may create files that will be needed by the
+  # actual build, so cleaning up later would potentially sabotage them.
+  make $INPUT_BUILD_CUSTOM_MAKE_OPTS clean
+}
+
+
 function run_docker_build_script () {
   local MAKE_OPT="$INPUT_BUILD_CUSTOM_MAKE_OPTS"
   local GHA_TGT="$INPUT_BUILD_CUSTOM_MAKE_TARGETS"
@@ -104,7 +115,7 @@ function run_docker_build_script () {
   else
     MAKE_TGT="$GHA_TGT"
   fi
-  [ -n "$MAKE_TGT" ] || MAKE_TGT='clean all'
+  [ -n "$MAKE_TGT" ] || MAKE_TGT='all'  # no clean! see buildmgr_early_cleanup
 
   local BCMD=(
     env
