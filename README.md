@@ -16,7 +16,7 @@ on Github infrastructure instead of
 [his original cloud service](https://nodemcu-build.com/).
 
 Ideally, having a Github action for this will allow us to build custom
-NodeMCU firmware images by just uploading your custom ingredients and
+NodeMCU firmware images by just uploading the custom ingredients and
 very few meta data into a Github repo. Let's see how close we can get.
 
 

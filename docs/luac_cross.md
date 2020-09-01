@@ -34,7 +34,8 @@ the firmware. Instead,
           * `user_config.h` and `user_modules.h`: Your config (see below).
 
 1.  Open a shell and chdir to `just_luac_cross/app/lua/luac_cross`.
-1.  Run `make`
+1.  Run `make clean all`
+    * or for Lua 5.3, run `make LUA=53 clean all`
 1.  Wait a bit. It should take very few minutes at most.
 1.  Chdir back to `just_luac_cross/`.
 1.  There should now be an executable file named `luac.cross`.
