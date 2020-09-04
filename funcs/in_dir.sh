@@ -3,6 +3,10 @@
 
 
 function in_dir () {
+  if [ "$1" == --if-exists ]; then
+    shift
+    [ -d "$1" ] || return 0$(echo "D: nothing to do: no such directory: $1" >&2)
+  fi
   [ -d "$1" ] || return $?$(echo "E: not a directory: $1" >&2)
   pushd -- "$1" >/dev/null || return $?$(echo "E: cannot chdir to $1" >&2)
   shift

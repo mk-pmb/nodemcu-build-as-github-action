@@ -24,7 +24,6 @@ function esp8266_copy_custom_config () {
     SED_CMD+=( "$SRC" )
     DEST="$DEST_INCL/user_$BFN"
     snip_run "${SED_CMD[*]}" "${SED_CMD[@]}" -i -- "$DEST" || return $?
-    cp --verbose --target-directory="$FW_BUILD_DIR" -- "$DEST" || return $?
   done
 
   esp8266_find_daredefs >/dev/null && BUILD_STRATEGY='esp8266_build_daredefs'

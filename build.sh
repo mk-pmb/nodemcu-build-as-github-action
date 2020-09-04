@@ -10,9 +10,6 @@ function build_main () {
   # ^-- Path of the uppermost directory that Github's upload action can access.
   export LOGS_DIR="$ARTIFACTS_BASEDIR/logs"
 
-  export FW_BUILD_DIR="$INGREDIENTS_REPO_DIR/output"
-  # ^-- Where to unpack the firmware source and then also build it there.
-
   local RESULTS_DESTDIR="$ARTIFACTS_BASEDIR/${INPUT_RESULTS_DIR#/}"
   RESULTS_DESTDIR="${RESULTS_DESTDIR%/}"
   # ^-- Where to move the files that were produces by the build.
