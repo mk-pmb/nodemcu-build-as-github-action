@@ -15,7 +15,6 @@ function build_main () {
   # ^-- Where to move the files that were produces by the build.
   #     Config should usually designare a subdirectory within this path.
 
-
   local LIB=
   for LIB in \
     "$BAGAPATH"/funcs/*.sh \

@@ -12,7 +12,7 @@ function export_output_files () {
   local OUT_DIR="$RESULTS_DESTDIR"
   mkdir --parents -- "$OUT_DIR" || return $?
   in_dir --if-exists "${PLAT_INCL_PREFIX}lfs" \
-    snip_run '' build_lfs_image || return $?
+    snip_run '' prepare_and_build_all_lfs_images || return $?
 
   FILES=()
   readarray -t FILES < <(diag_find_output_files)
@@ -60,46 +60,6 @@ function copy_renamed_output_files__each () {
   ${EXPORT_CMD:-cp --verbose --no-target-directory --} \
     "$ORIG_FN" "$DEST_FN" || return $?
 }
-
-
-function build_lfs_image () {
-  local FILES=()
-  local PREP='_prepare.sh'
-  if [ -f "$PREP" ]; then
-    chmod a+x -- "$PREP"
-    echo -n "Run $PREP: "
-    ./"$PREP" --prepare || return $?$(echo "E: $PREPfailed, rv=$?" >&2)
-    echo "done."
-  else
-    echo "D: not a file: $PREP"
-  fi
-
-  echo "Packing LFS images:"
-  local IMG_BN= DEST= CNT=0
-  for IMG_BN in [A-Za-z0-9]*/; do
-    [ -d "$IMG_BN" ] || continue
-    IMG_BN="${IMG_BN%/}"
-    DEST="$OUT_DIR/$IMG_BN.lfs"
-    echo -n "  * $IMG_BN.lfs <- $IMG_BN/**.{lc,lua}: "
-    readarray -t FILES < <(find "$IMG_BN/" -mindepth 1 '(' -false \
-      -o -name '*.lc' \
-      -o -name '*.lua' \
-      ')' | cut -d / -f 2- | LANG=C sort --version-sort)
-    if [ -z "${FILES[*]}" ]; then
-      echo 'found no files.'
-      continue
-    fi
-    in_dir "$IMG_BN" "$LUAC" -f -o "$DEST" -- "${FILES[@]}" || return $?$(
-      echo "E: luac failed, rv=$?" >&2)
-    du --human-readable --apparent-size -- "$DEST" | grep -oPe '^\S+'
-    (( CNT += 1 ))
-  done
-  echo "Done packing $CNT LFS images."
-}
-
-
-
-
 
 
 
