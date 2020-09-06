@@ -14,6 +14,13 @@ function with_log_tee () {
 }
 
 
+function with_spaceword_args () {
+  local WORDS=()
+  readarray -t WORDS < <(<<<"$1" grep -oPe '\S+'); shift
+  "$@" "${WORDS[@]}"; return $?
+}
+
+
 
 
 

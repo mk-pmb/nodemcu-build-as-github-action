@@ -40,6 +40,10 @@ inputs:
         description: 'If non-empty, hard-reset the repo to whatever is given here. It should probably be something commit-ish.'
         required: false
         default: ''
+    firmware_apply_patches:
+        description: 'Apply (git am) these patches. Whitespace-separated list of file paths and/or URLs.'
+        required: false
+        default: ''
     firmware_hotfix_cmd:
         description: 'A command to run in the firmware directory to pre-configure it or similar.'
         required: false

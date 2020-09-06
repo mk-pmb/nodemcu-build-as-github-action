@@ -25,6 +25,10 @@ function fwsrc_clone () {
     s~^|\n~&D: ~g
     '
 
+  snip_run "Apply recipe's custom patches to firmware" \
+    with_spaceword_args "$INPUT_FIRMWARE_APPLY_PATCHES" \
+    apply_git_patches || return $?
+
   snip_run "Apply recipe's custom hotfixes to firmware" \
     eval "$INPUT_FIRMWARE_HOTFIX_CMD" || return $?
 

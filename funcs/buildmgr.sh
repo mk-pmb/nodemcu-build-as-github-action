@@ -47,14 +47,44 @@ function make_or_warn () {
 }
 
 
+function apply_git_patches () {
+  local PATCH= PRE=
+  for PATCH in "$@"; do
+    case "$PATCH" in
+      fw-commit:* ) ;;
+      fw:* ) git am -- "${PATCH#*//}" || return $?;;
+      *://* ) ;;
+      url:* ) ;;
+      * ) PATCH="${INGREDIENTS_REPO_DIR%/}/$PATCH";;
+    esac
+    echo -n "Apply patch '$PATCH': "
+    case "$PATCH" in
+      fw-commit:* )
+        PRE="$INPUT_FIRMWARE_REPO"
+        PRE="${PRE%.git}"
+        PRE="${PRE%.git/}"
+        PRE="${PRE%/}"
+        PATCH="$PRE/commit/${PATCH#*:}.patch";;  # GitHub style
+    esac
+    case "$PATCH" in
+      http://* | \
+      https://* | \
+      url: )
+        PATCH="${PATCH#url:}"
+        wget --quiet --output-document=- -- "$PATCH" | git am
+        sum_pipe_rv || return $?;;
+      * ) git am -- "$PATCH" || return $?;;
+    esac
+    echo
+  done
+}
+
+
 function buildmgr_commence_fallible () {
   local -A BUILD=()
   local BUILD_STRATEGY="${BUILD_STRATEGY:-run_build_script}"
   local BUILD_SCRIPT_CMD="${INPUT_FIRMWARE_BUILD_CMD:-run_docker_build_script}"
   local BUILD_SCRIPT_CTR=0
-
-  apply_user_hotfixes "$INGREDIENTS_REPO_DIR" \
-    "$INPUT_RECIPE_HOTFIX_CMD" || return $?
 
   snip_run buildmgr_early_cleanup || return $?
 
