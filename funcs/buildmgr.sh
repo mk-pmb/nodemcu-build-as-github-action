@@ -47,13 +47,6 @@ function make_or_warn () {
 }
 
 
-function apply_user_hotfixes () {
-  local HOTFIXES_DIR="$1"; shift
-  snip_run "$FUNCNAME $HOTFIXES_DIR" \
-    in_dir "$HOTFIXES_DIR" eval "$@" || return $?
-}
-
-
 function buildmgr_commence_fallible () {
   local -A BUILD=()
   local BUILD_STRATEGY="${BUILD_STRATEGY:-run_build_script}"

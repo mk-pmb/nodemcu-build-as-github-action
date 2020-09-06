@@ -25,7 +25,8 @@ function fwsrc_clone () {
     s~^|\n~&D: ~g
     '
 
-  apply_user_hotfixes "$FWSRCDIR"  "$INPUT_FIRMWARE_HOTFIX_CMD" || return $?
+  snip_run "Apply recipe's custom hotfixes to firmware" \
+    eval "$INPUT_FIRMWARE_HOTFIX_CMD" || return $?
 
   fwsrc_clone__liccmp || return $?
 }
