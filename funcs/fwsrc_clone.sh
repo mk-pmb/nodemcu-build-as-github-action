@@ -3,13 +3,13 @@
 
 
 function fwsrc_clone () {
-  if [ -f "$INPUT_FIRMWARE_SRCDIR"/Makefile ]; then
-    echo "D: Makefile already exists in $INPUT_FIRMWARE_SRCDIR => skip cloning."
+  if [ -f "$FWSRCDIR"/Makefile ]; then
+    echo "D: Makefile already exists in $FWSRCDIR => skip cloning."
   else
     git clone --single-branch --branch "$INPUT_FIRMWARE_BRANCH" \
-      "$INPUT_FIRMWARE_REPO" "$INPUT_FIRMWARE_SRCDIR" || return $?
+      "$INPUT_FIRMWARE_REPO" "$FWSRCDIR" || return $?
   fi
-  cd -- "$INPUT_FIRMWARE_SRCDIR" || return $?
+  cd -- "$FWSRCDIR" || return $?
   [ -z "$INPUT_FIRMWARE_GIT_RESET" ] \
     || snip_run '' git reset --hard "$INPUT_FIRMWARE_GIT_RESET" || return $?
   snip_run '' git submodule init || return $?
@@ -25,8 +25,7 @@ function fwsrc_clone () {
     s~^|\n~&D: ~g
     '
 
-  apply_user_hotfixes "$INPUT_FIRMWARE_SRCDIR" \
-    "$INPUT_FIRMWARE_HOTFIX_CMD" || return $?
+  apply_user_hotfixes "$FWSRCDIR"  "$INPUT_FIRMWARE_HOTFIX_CMD" || return $?
 
   fwsrc_clone__liccmp || return $?
 }
@@ -43,7 +42,7 @@ function fwsrc_clone__liccmp () {
   case "$CMP" in
     *' = '* ) SRC="${CMP% = *}"; CMP="${CMP##* = }";;
   esac
-  [ "${SRC:0:1}" == / ] || SRC="$INPUT_FIRMWARE_SRCDIR/$SRC"
+  [ "${SRC:0:1}" == / ] || SRC="$FWSRCDIR/$SRC"
   [ "${CMP:0:1}" == / ] || CMP="$INGREDIENTS_REPO_DIR/$CMP"
   diff -sU 9009009 -- "$SRC" "$CMP" || return $?
 }

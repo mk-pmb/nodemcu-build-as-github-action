@@ -144,7 +144,7 @@ function buildmgr_plain_copy_dir_if_exists () {
   fi
   snip_ls "$SRC/" || true
   cp --verbose --recursive --no-target-directory \
-    -- "$SRC/" "$INPUT_FIRMWARE_SRCDIR/$DEST/" || return $?
+    -- "$SRC/" "$FWSRCDIR/$DEST/" || return $?
 }
 
 

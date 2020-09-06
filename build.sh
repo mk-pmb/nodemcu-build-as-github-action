@@ -9,6 +9,7 @@ function build_main () {
   export ARTIFACTS_BASEDIR="$INGREDIENTS_REPO_DIR"
   # ^-- Path of the uppermost directory that Github's upload action can access.
   export LOGS_DIR="$ARTIFACTS_BASEDIR/logs"
+  local FWSRCDIR="$INPUT_FIRMWARE_SRCDIR"
 
   local RESULTS_DESTDIR="$ARTIFACTS_BASEDIR/${INPUT_RESULTS_DIR#/}"
   RESULTS_DESTDIR="${RESULTS_DESTDIR%/}"

@@ -3,7 +3,7 @@
 
 
 function esp32_copy_custom_config () {
-  local DEST="$INPUT_FIRMWARE_SRCDIR/sdkconfig"
+  local DEST="$FWSRCDIR/sdkconfig"
   if [ -f "$DEST" ]; then
     echo "D: $FUNCNAME: skip: target exists: $DEST"
     return 0
@@ -24,7 +24,7 @@ function esp32_copy_custom_config () {
     echo
   done >>"$DEST" || return $?
 
-  # SRC="$INPUT_FIRMWARE_SRCDIR/build/include/sdkconfig.h"
+  # SRC="$FWSRCDIR/build/include/sdkconfig.h"
   # diag_gcc_defines_to_ini "$SRC" '' >"${SRC%.h}.ini" || return $?
 }
 

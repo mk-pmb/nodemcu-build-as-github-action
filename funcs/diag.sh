@@ -53,10 +53,9 @@ function diag_find_output_files () {
 function debug_status_report_relevant_dirs () {
   snip_ls "$HOME"
   snip_ls "$HOME"/.cache/pip
-  local FWSRC="$INPUT_FIRMWARE_SRCDIR"
-  snip_ls "$FWSRC"/bin/
+  snip_ls "$FWSRCDIR"/bin/
   snip_run '' diag_find_output_files md5sum --binary --
-  # snip_ls "$FWSRC"/sdk/*-idf/
+  # snip_ls "$FWSRCDIR"/sdk/*-idf/
   snip_ls /opt/lua/
   snip_run '' diag_git_repo
   # snip_run '' diag_git_repo "$BAGAPATH"

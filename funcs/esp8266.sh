@@ -5,7 +5,7 @@
 function esp8266_copy_custom_config () {
   local SRC_INCL="${PLAT_INCL_PREFIX}app.include"
   snip_ls "$SRC_INCL"/ || return $?
-  local DEST_INCL="$INPUT_FIRMWARE_SRCDIR/app/include"
+  local DEST_INCL="$FWSRCDIR/app/include"
 
   local SRC= BFN= DEST=
   for SRC in "$SRC_INCL"/*.h; do
