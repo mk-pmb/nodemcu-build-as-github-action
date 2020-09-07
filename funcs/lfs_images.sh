@@ -46,10 +46,40 @@ function build_one_prepared_lfs_image () {
     echo 'found no files.'
     continue
   fi
+  readarray -t FILES < <(in_dir "$IMG_BN" build_lfs_image__check_file_opts \
+    "${FILES[@]}") || return $?
+  if [ -z "${FILES[*]}" ]; then
+    echo 'Found some LUA files but all of them are exempted.'
+    continue
+  fi
   in_dir "$IMG_BN" "${LUAC:-luac-for-nodemcu}" -f -o "$DEST" \
     -- "${FILES[@]}" || return $?$(echo "E: luac failed, rv=$?" >&2)
   echo -n '    LFS size: '
   du --human-readable --apparent-size -- "$DEST" | grep -oPe '^\S+'
+}
+
+
+function build_lfs_image__check_file_opts () {
+  local SRC=
+  local -A OPT=()
+  for SRC in "$@"; do
+    case "$SRC" in
+      *.lua ) ;;
+      * ) echo "$SRC"; continue;;
+    esac
+    OPT=()
+    eval "OPT=( $(parse_modeline "$SRC") )"
+    case "${OPT[lfs]}" in
+      '' ) ;;
+      no )
+        # echo "D: $SRC: skip by modeline" >&2
+        continue;;
+      * )
+        echo "E: $SRC: unsupported setting for modeline option lfs." >&2
+        return 3;;
+    esac
+    echo "$SRC"
+  done
 }
 
 
