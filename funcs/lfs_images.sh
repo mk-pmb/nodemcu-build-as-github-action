@@ -15,10 +15,9 @@ function prepare_and_build_all_lfs_images () {
   fi
 
   echo "Packing LFS images:"
-  local IMG_BN= DEST= CNT=0
+  local BULLET='  * ' IMG_BN= DEST= CNT=0
   for IMG_BN in [A-Za-z0-9]*/; do
     [ -d "$IMG_BN" ] || continue
-    echo -n "  * "
     IMG_BN="${IMG_BN%/}"
     build_one_prepared_lfs_image "$IMG_BN" "$OUT_DIR/" || return $?
     (( CNT += 1 ))
@@ -34,8 +33,11 @@ function build_one_prepared_lfs_image () {
     '' | */ ) DEST+="$IMG_BN.lfs";;
   esac
   [ "${DEST:0:1}" == / ] || DEST="$PWD/$DEST"
+
+  in_dir "$IMG_BN" build_lfs_image__import_all_external_files || return $?
+
   local FILES=()
-  echo -n "$IMG_BN.lfs <- $IMG_BN/**.{lc,lua}: "
+  echo -n "${BULLET}$IMG_BN.lfs <- $IMG_BN/**.{lc,lua}: "
   readarray -t FILES < <(find "$IMG_BN/" -mindepth 1 '(' -false \
     -o -name '*.lc' \
     -o -name '*.lua' \
@@ -46,8 +48,52 @@ function build_one_prepared_lfs_image () {
   fi
   in_dir "$IMG_BN" "${LUAC:-luac-for-nodemcu}" -f -o "$DEST" \
     -- "${FILES[@]}" || return $?$(echo "E: luac failed, rv=$?" >&2)
+  echo -n '    LFS size: '
   du --human-readable --apparent-size -- "$DEST" | grep -oPe '^\S+'
 }
+
+
+function build_lfs_image__import_all_external_files () {
+  local FILE='externals.txt'
+  local SPECS=()
+  [ -f "$FILE" ] || return 0
+  readarray -t SPECS < <(sed -rf <(echo '
+    s~\r~~g
+    s~\s+~ ~g
+    /^ *(#|$)/d
+    ') -- "$FILE") || return $?
+  local N_SPECS="${#SPECS[@]}"
+  echo "${BULLET}Import $N_SPECS external files for $IMG_BN.lfs:"
+  local SPEC= LINK=
+  for SPEC in "${SPECS[@]}"; do
+    echo -n "    * Import '$SPEC': "
+    LINK="${SPEC%% = *}"
+    LINK="${LINK##*[:/]}"
+    [[ "$LINK" == *.* ]] || LINK+='.lua'
+    SPEC="${SPEC#* = }"
+    FILE="$(fetch_url_resource "$SPEC")" || return $?
+    [ -n "$FILE" ] || return 3$(echo "E: unsupported URL format" >&2)
+    [ ! -L "$LINK" ] || rm --one-file-system -- "$LINK" || true
+    ln --verbose --symbolic --no-target-directory \
+      -- "$FILE" "$LINK" || return $?
+  done
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

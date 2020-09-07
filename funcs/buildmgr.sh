@@ -48,33 +48,13 @@ function make_or_warn () {
 
 
 function apply_git_patches () {
-  local PATCH= PRE=
+  local PATCH=
   for PATCH in "$@"; do
-    case "$PATCH" in
-      fw-commit:* ) ;;
-      fw:* ) git am -- "${PATCH#*//}" || return $?;;
-      *://* ) ;;
-      url:* ) ;;
-      * ) PATCH="${INGREDIENTS_REPO_DIR%/}/$PATCH";;
-    esac
     echo -n "Apply patch '$PATCH': "
-    case "$PATCH" in
-      fw-commit:* )
-        PRE="$INPUT_FIRMWARE_REPO"
-        PRE="${PRE%.git}"
-        PRE="${PRE%.git/}"
-        PRE="${PRE%/}"
-        PATCH="$PRE/commit/${PATCH#*:}.patch";;  # GitHub style
-    esac
-    case "$PATCH" in
-      http://* | \
-      https://* | \
-      url: )
-        PATCH="${PATCH#url:}"
-        wget --quiet --output-document=- -- "$PATCH" | git am
-        sum_pipe_rv || return $?;;
-      * ) git am -- "$PATCH" || return $?;;
-    esac
+    PATCH="$(FILE_ROOT="$INGREDIENTS_REPO_DIR" fetch_url_resource "$PATCH"
+      )" || return $?
+    [ -n "$PATCH" ] || return 3$(echo "E: unsupported URL format" >&2)
+    git am -- "$PATCH" || return $?
     echo
   done
 }
