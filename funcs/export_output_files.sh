@@ -3,8 +3,7 @@
 
 
 function export_output_files () {
-  local FILES=( "$PWD"/luac.cross* )
-  local LUAC="${FILES[*]}"
+  local LUAC="$(find "$PWD"/ -type f -name 'luac.cross*')"
   [ -x "$LUAC" ] || return 3$(echo "E: not executable: $LUAC" >&2)
   ln --symbolic --verbose --target-directory=/usr/local/bin \
     -- "$LUAC" || return $?
@@ -14,7 +13,7 @@ function export_output_files () {
   in_dir --if-exists "${PLAT_INCL_PREFIX}lfs" \
     snip_run '' prepare_and_build_all_lfs_images || return $?
 
-  FILES=()
+  local FILES=()
   readarray -t FILES < <(diag_find_output_files)
   snip_oppofunc on_before_"$FUNCNAME" || return $?
   snip_run '' copy_renamed_output_files || return $?
