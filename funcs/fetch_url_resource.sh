@@ -42,7 +42,8 @@ function fetch_url_resource () {
       URL="${URL%.git}"
       URL="${URL%.git/}"
       URL="${URL%/}"
-      URL+="/commit/$SAVE.patch" # GitHub style
+      SAVE+='.patch'
+      URL+="/commit/$SAVE" # GitHub style
       ;;
     * )
       SAVE="$(<<<"$URL" sha1sum --binary | grep -oPe '^\w+')"
