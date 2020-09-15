@@ -15,6 +15,22 @@ function fwsrc_clone () {
   snip_run '' git submodule init || return $?
   snip_run '' git submodule update --recursive || return $?
 
+  snip_run '' fwsrc_summarize_repo_history
+
+  snip_run "Apply recipe's custom patches to firmware" \
+    with_spaceword_args "$INPUT_FIRMWARE_APPLY_PATCHES" \
+    apply_git_patches || return $?
+
+  snip_run "Apply recipe's custom hotfixes to firmware" \
+    eval "$INPUT_FIRMWARE_HOTFIX_CMD" || return $?
+
+  snip_run '' fwsrc_summarize_repo_history
+
+  fwsrc_clone__liccmp || return $?
+}
+
+
+function fwsrc_summarize_repo_history () {
   echo -n "D: Firmware repo is at branch $(
     git branch | sed -nre 's~^\* ~~p' || echo '(no branch?)'
     ), commit ";
@@ -24,15 +40,6 @@ function fwsrc_clone () {
     2s~^~Recent history:\n~
     s~^|\n~&D: ~g
     '
-
-  snip_run "Apply recipe's custom patches to firmware" \
-    with_spaceword_args "$INPUT_FIRMWARE_APPLY_PATCHES" \
-    apply_git_patches || return $?
-
-  snip_run "Apply recipe's custom hotfixes to firmware" \
-    eval "$INPUT_FIRMWARE_HOTFIX_CMD" || return $?
-
-  fwsrc_clone__liccmp || return $?
 }
 
 
