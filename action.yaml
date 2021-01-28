@@ -8,6 +8,7 @@ name: 'Build NodeMCU'
 description: 'Build a NodeMCU firmware image.'
 
 branding:
+    # https://github.com/mk-pmb/feather-icons-preview-pmb
     icon: 'package'
     color: 'orange'
 
