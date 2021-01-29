@@ -11,7 +11,7 @@ function esp32_copy_custom_config () {
 
   cp --no-target-directory -- sdkconfig{.defaults,} || return $?
   local RC_DIR="${PLAT_INCL_PREFIX}sdkcfg/"
-  snip_ls "$RC_DIR"/ || return $?
+  snip_ls "$RC_DIR" || return $?
   local SRC= SUB=
   for SRC in "$RC_DIR"[0-9]{,*/}*.rc; do
     [ -f "$SRC" ] || continue

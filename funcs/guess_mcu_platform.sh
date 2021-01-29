@@ -8,8 +8,13 @@ function guess_mcu_platform () {
     | sed -nre '
       s~\.h$~~
       /\*$/d
-      s~^.*/cpu_~~p
-    ')"
+      s~^.*/cpu_~\n~
+      /^\n/{
+        s~^\n~~
+        s~_irq$~~
+        p
+      }
+    ' | sort --unique)"
   case "$PLAT" in
     '' )
       echo "E: $FUNCNAME: found no candidates at all." >&2
