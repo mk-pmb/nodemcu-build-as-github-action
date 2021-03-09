@@ -1,5 +1,5 @@
 { "name": "nodemcu-firmware-build-as-github-action",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A Github action that builds a custom NodeMCU firmware image for me.",
   "keywords": [
     "build",

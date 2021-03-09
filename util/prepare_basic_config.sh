@@ -12,6 +12,7 @@ function prepare_basic_config () {
 
 
 function make_git_rebase_just_work_by_default () {
+  git config --system init.defaultBranch 'master'
   git config --system user.name 'User Name'
   git config --system user.email 'user@example.net'
 }
